@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { z } from 'zod';
+import { hashSync } from 'bcryptjs';
 
 
 @Injectable()
@@ -15,28 +15,6 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
-
-    // Validate ด้วย zod
-    const schema = z.object({
-      username: z.string().min(1, 'username is required'),
-      email: z.string().email('email is invalid'),
-      password: z.string().min(6, 'password ต้องมากกว่า 6 ตัวอักษร'),
-      age: z.number().min(18, 'อายุต้องมากกว่า 18 ปี'),
-    });
-
-    const result = schema.safeParse(createUserDto);
-    if (!result.success) {
-      const messages = result.error.issues.map(e => e.message).join(', ');
-      throw new BadRequestException(messages);
-    }
-
-    const user = await this.userRepository.save(createUserDto);
-    return {
-      message: 'สร้างผู้ใช้สำเร็จ',
-      data: user
-    };
-  }
 
  async findAll() {
   const users = await this.userRepository.find();
@@ -50,9 +28,8 @@ export class UsersService {
 
   }
 
-
  async findOne(id: number) {
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOneBy({ userId: id });
     if (!user) {
       throw new NotFoundException('ไม่พบผู้ใช้');
     }
@@ -62,38 +39,44 @@ export class UsersService {
     };
   }
 
+  async create(createUserDto: CreateUserDto) {
+    // Hash password ก่อนบันทึก
+    const hashedPassword = hashSync(createUserDto.passWord, 10);
+    const userToSave = { ...createUserDto, passWord: hashedPassword };
+    const user = await this.userRepository.save(userToSave);
+    return {
+      message: 'สร้างผู้ใช้สำเร็จ',
+      data: user
+    };
+  }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<{ message: string }> {
     // ตรวจสอบก่อนว่ามี user จริงไหม
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOneBy({ userId: id });
     if (!user) {
       throw new NotFoundException('ไม่พบผู้ใช้');
     }
-    // Validate ด้วย zod
-    const schema = z.object({
-      name: z.string().min(1, 'name is required').optional(),
-      password: z.string().min(6, 'password ต้องมากกว่า 6 ตัวอักษร').optional(),
-      email: z.string().email('email is invalid').optional(),
-      age: z.number().min(18, 'อายุต้องมากกว่า 18 ปี').optional(),
-    });
-    const result = schema.safeParse(updateUserDto);
-    if (!result.success) {
-      const messages = result.error.issues.map(e => e.message).join(', ');
-      throw new BadRequestException(messages);
+  
+    // ถ้ามีการส่งรหัสผ่านใหม่มา ให้ hash ก่อน
+    let updateData = { ...updateUserDto };
+    if (updateUserDto.passWord) {
+      updateData.passWord = hashSync(updateUserDto.passWord, 10);
     }
-    await this.userRepository.update(id, updateUserDto);
+  
+    await this.userRepository.update(id, updateData);
     return { message: 'อัปเดตผู้ใช้สำเร็จ' };
   }
 
 
   async remove(id: number): Promise<{ message: string }> {
     // ตรวจสอบก่อนว่ามี user จริงไหม
-    const user = await this.userRepository.findOneBy({ id });
+    const user = await this.userRepository.findOneBy({ userId: id });
     if (!user) {
       throw new NotFoundException('ไม่พบผู้ใช้');
     }
     await this.userRepository.delete(id);
     return { message: 'ลบผู้ใช้สำเร็จ' };
   }
+  
 
 }

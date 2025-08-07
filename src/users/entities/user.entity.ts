@@ -1,19 +1,21 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+// PrimaryGeneratedColumn สร้าง id pk ให้เอง
+
+@Entity('USERS')
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn({name: 'USER_ID'})
+    userId: number;
 
-    @Column()
-    username: string;
+    @Column({name: 'USER_NAME',nullable: false})
+    userName: string;
 
-    @Column()
-    password: string;
+    @Column({name: 'PASS_WORD',nullable: false})
+    passWord: string;
 
-    @Column()
+    @Column({name: 'EMAIL',nullable: false})
     email: string;
 
-    @Column()
+    @Column({name: 'AGE',nullable: false})
     age: number;
-}
+}  

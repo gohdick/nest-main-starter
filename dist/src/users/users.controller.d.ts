@@ -6,7 +6,12 @@ export declare class UsersController {
     constructor(usersService: UsersService);
     create(createUserDto: CreateUserDto): Promise<{
         message: string;
-        data: CreateUserDto & import("./entities/user.entity").User;
+        data: {
+            passWord: string;
+            userName: string;
+            email: string;
+            age: number;
+        } & import("./entities/user.entity").User;
     }>;
     findAll(): Promise<{
         message: string;

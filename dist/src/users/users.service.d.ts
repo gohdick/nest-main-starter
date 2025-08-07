@@ -5,10 +5,6 @@ import { Repository } from 'typeorm';
 export declare class UsersService {
     private userRepository;
     constructor(userRepository: Repository<User>);
-    create(createUserDto: CreateUserDto): Promise<{
-        message: string;
-        data: CreateUserDto & User;
-    }>;
     findAll(): Promise<{
         message: string;
         data: User[];
@@ -16,6 +12,15 @@ export declare class UsersService {
     findOne(id: number): Promise<{
         message: string;
         data: User;
+    }>;
+    create(createUserDto: CreateUserDto): Promise<{
+        message: string;
+        data: {
+            passWord: string;
+            userName: string;
+            email: string;
+            age: number;
+        } & User;
     }>;
     update(id: number, updateUserDto: UpdateUserDto): Promise<{
         message: string;
