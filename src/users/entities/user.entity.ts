@@ -1,8 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn,DeleteDateColumn } from 'typeorm';
 
 // PrimaryGeneratedColumn สร้าง id pk ให้เอง
 
-@Entity('USERS')
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn({name: 'USER_ID'})
     userId: number;
@@ -15,7 +15,20 @@ export class User {
 
     @Column({name: 'EMAIL',nullable: false})
     email: string;
-
+   
     @Column({name: 'AGE',nullable: false})
-    age: number;
+    age: number; 
+ 
+    @CreateDateColumn({name: 'CREATED_DATE'})
+    createdAt: Date;
+
+    @UpdateDateColumn({name: 'UPDATED_DATE'})
+    updatedAt: Date; 
+
+    @DeleteDateColumn({name: 'DELETED_DATE'})
+    deletedAt: Date; 
+
+    @Column({name: 'ACCESS_TOKEN'})
+    accessToken: string;
+    
 }  

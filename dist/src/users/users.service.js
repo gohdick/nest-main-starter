@@ -19,7 +19,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const bcryptjs_1 = require("bcryptjs");
 let UsersService = class UsersService {
-    userRepository;
     constructor(userRepository) {
         this.userRepository = userRepository;
     }
@@ -69,7 +68,7 @@ let UsersService = class UsersService {
         if (!user) {
             throw new common_1.NotFoundException('ไม่พบผู้ใช้');
         }
-        await this.userRepository.delete(id);
+        await this.userRepository.softDelete(id);
         return { message: 'ลบผู้ใช้สำเร็จ' };
     }
 };

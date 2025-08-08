@@ -14,5 +14,6 @@ import { PassportModule } from '@nestjs/passport';
     secret: 'secretKey',
     signOptions: { expiresIn: '1h' },
   }), PassportModule.register({ defaultStrategy: 'jwt' })],
+  exports: [UsersService],
 })
 export class UsersModule {}

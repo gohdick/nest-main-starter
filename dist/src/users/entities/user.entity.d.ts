@@ -4,4 +4,8 @@ export declare class User {
     passWord: string;
     email: string;
     age: number;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date;
+    accessToken: string;
 }

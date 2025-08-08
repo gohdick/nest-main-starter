@@ -9,25 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserDto = void 0;
+exports.CreateAuthDto = void 0;
 const class_validator_1 = require("class-validator");
-class CreateUserDto {
+class CreateAuthDto {
 }
-exports.CreateUserDto = CreateUserDto;
+exports.CreateAuthDto = CreateAuthDto;
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "userName", void 0);
+], CreateAuthDto.prototype, "userName", void 0);
 __decorate([
-    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateUserDto.prototype, "passWord", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], CreateUserDto.prototype, "email", void 0);
-__decorate([
-    (0, class_validator_1.IsNumber)(),
-    __metadata("design:type", Number)
-], CreateUserDto.prototype, "age", void 0);
-//# sourceMappingURL=create-user.dto.js.map
+], CreateAuthDto.prototype, "passWord", void 0);
+//# sourceMappingURL=create-auth.dto.js.map

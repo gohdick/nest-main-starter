@@ -25,8 +25,8 @@ export class UsersService {
       message: 'ค้นหาผู้ใช้สำเร็จ',
       data: users
     };
-
   }
+
 
  async findOne(id: number) {
     const user = await this.userRepository.findOneBy({ userId: id });
@@ -39,6 +39,7 @@ export class UsersService {
     };
   }
 
+
   async create(createUserDto: CreateUserDto) {
     // Hash password ก่อนบันทึก
     const hashedPassword = hashSync(createUserDto.passWord, 10);
@@ -49,6 +50,7 @@ export class UsersService {
       data: user
     };
   }
+
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<{ message: string }> {
     // ตรวจสอบก่อนว่ามี user จริงไหม
@@ -74,9 +76,9 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('ไม่พบผู้ใช้');
     }
-    await this.userRepository.delete(id);
+    await this.userRepository.softDelete(id);
     return { message: 'ลบผู้ใช้สำเร็จ' };
   }
-  
+
 
 }

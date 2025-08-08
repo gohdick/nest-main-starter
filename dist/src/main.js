@@ -15,6 +15,9 @@ async function bootstrap() {
     });
     app.useGlobalPipes(new common_1.ValidationPipe());
     app.useGlobalFilters(new http_exception_filter_1.HttpExceptionFilter(), new query_failed_exception_filter_1.QueryFailedExceptionFilter());
+    app.use((req, res, next) => {
+        next();
+    });
     await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

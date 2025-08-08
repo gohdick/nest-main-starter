@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -9,8 +9,9 @@ import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { AllExceptionsFilter } from '../filters/all-exceptions.filter';
 import { QueryFailedExceptionFilter } from '../filters/query-failed-exception.filter';
 import { ValidationPipe } from '../pipes/validation.pipe';
-
-// synchroniz ถ้ามีการเปลี่ยนแปลงใน entity จะให้สร้าง table ใหม่
+import { AuthModule } from './auth/auth.module';
+import { JwtDecodeMiddleware } from './jwt-decode.middleware';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -19,18 +20,21 @@ import { ValidationPipe } from '../pipes/validation.pipe';
   UsersModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
-      autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       database: 'nest_auth',
       host: '127.0.0.1',
       port: 3306,
       username: 'root',
       password: '',
-      entities: [User],
-    })],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    }),
+    AuthModule],
   
   controllers: [AppController],
-  providers: [AppService ,{
+  providers: [AppService ,
+    JwtDecodeMiddleware,
+    JwtService,
+    {
     provide: APP_FILTER,
     useClass: AllExceptionsFilter,
   },
@@ -43,4 +47,13 @@ import { ValidationPipe } from '../pipes/validation.pipe';
     useClass: ValidationPipe, 
   },],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) { // ให้ผู้ใช้ ผ่าน Middleware ก่อนที่จะเข้าถึง Controller
+    consumer
+      .apply(JwtDecodeMiddleware) //สร้างกฏให้ผู้ใช้ผ่าน Middleware ก่อนที่จะเข้าถึง Controller
+      .exclude({ path: 'auth/register', method: RequestMethod.POST },
+        { path: 'auth/login', method: RequestMethod.POST }
+      ) // ยกเว้นเส้นทาง login
+      .forRoutes({ path: '*', method: RequestMethod.ALL }); // ทุกๆเส้นทางที่ใช้ก็ต้องผ่าน Middleware
+  }
+}

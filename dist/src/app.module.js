@@ -12,13 +12,21 @@ const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
 const typeorm_1 = require("@nestjs/typeorm");
-const user_entity_1 = require("./users/entities/user.entity");
 const config_1 = require("@nestjs/config");
 const core_1 = require("@nestjs/core");
 const all_exceptions_filter_1 = require("../filters/all-exceptions.filter");
 const query_failed_exception_filter_1 = require("../filters/query-failed-exception.filter");
 const validation_pipe_1 = require("../pipes/validation.pipe");
+const auth_module_1 = require("./auth/auth.module");
+const jwt_decode_middleware_1 = require("./jwt-decode.middleware");
+const jwt_1 = require("@nestjs/jwt");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer
+            .apply(jwt_decode_middleware_1.JwtDecodeMiddleware)
+            .exclude({ path: 'auth/register', method: common_1.RequestMethod.POST }, { path: 'auth/login', method: common_1.RequestMethod.POST })
+            .forRoutes({ path: '*', method: common_1.RequestMethod.ALL });
+    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
@@ -29,17 +37,20 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UsersModule,
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'mysql',
-                autoLoadEntities: true,
-                synchronize: false,
+                synchronize: true,
                 database: 'nest_auth',
                 host: '127.0.0.1',
                 port: 3306,
                 username: 'root',
                 password: '',
-                entities: [user_entity_1.User],
-            })],
+                entities: [__dirname + '/**/*.entity{.ts,.js}'],
+            }),
+            auth_module_1.AuthModule],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, {
+        providers: [app_service_1.AppService,
+            jwt_decode_middleware_1.JwtDecodeMiddleware,
+            jwt_1.JwtService,
+            {
                 provide: core_1.APP_FILTER,
                 useClass: all_exceptions_filter_1.AllExceptionsFilter,
             },

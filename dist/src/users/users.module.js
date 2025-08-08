@@ -26,6 +26,7 @@ exports.UsersModule = UsersModule = __decorate([
                 secret: 'secretKey',
                 signOptions: { expiresIn: '1h' },
             }), passport_1.PassportModule.register({ defaultStrategy: 'jwt' })],
+        exports: [users_service_1.UsersService],
     })
 ], UsersModule);
 //# sourceMappingURL=users.module.js.map

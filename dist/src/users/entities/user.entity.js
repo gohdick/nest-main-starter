@@ -12,11 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const typeorm_1 = require("typeorm");
 let User = class User {
-    userId;
-    userName;
-    passWord;
-    email;
-    age;
 };
 exports.User = User;
 __decorate([
@@ -39,7 +34,23 @@ __decorate([
     (0, typeorm_1.Column)({ name: 'AGE', nullable: false }),
     __metadata("design:type", Number)
 ], User.prototype, "age", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ name: 'CREATED_DATE' }),
+    __metadata("design:type", Date)
+], User.prototype, "createdAt", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ name: 'UPDATED_DATE' }),
+    __metadata("design:type", Date)
+], User.prototype, "updatedAt", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)({ name: 'DELETED_DATE' }),
+    __metadata("design:type", Date)
+], User.prototype, "deletedAt", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'ACCESS_TOKEN' }),
+    __metadata("design:type", String)
+], User.prototype, "accessToken", void 0);
 exports.User = User = __decorate([
-    (0, typeorm_1.Entity)('USERS')
+    (0, typeorm_1.Entity)('users')
 ], User);
 //# sourceMappingURL=user.entity.js.map

@@ -2,7 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { QueryFailedExceptionFilter } from '../filters/query-failed-exception.filter';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';    
+
 
 async function bootstrap() {
     
@@ -18,7 +19,11 @@ const app = await NestFactory.create(AppModule, { cors: true });
     new HttpExceptionFilter(),
     new QueryFailedExceptionFilter(),
   );
-  await app.listen(process.env.PORT ?? 3000);
+  app.use((req, res, next) => {
+    // console.log('HTTP request:', req.url);
+    next();
+  });
+    await app.listen(process.env.PORT ?? 3000);
 
 }
 bootstrap();
