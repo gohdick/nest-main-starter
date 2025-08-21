@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn,DeleteDateColumn } from 'typeorm';
-
 // PrimaryGeneratedColumn สร้าง id pk ให้เอง
 
 @Entity('users')

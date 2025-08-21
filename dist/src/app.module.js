@@ -20,6 +20,7 @@ const validation_pipe_1 = require("../pipes/validation.pipe");
 const auth_module_1 = require("./auth/auth.module");
 const jwt_decode_middleware_1 = require("./jwt-decode.middleware");
 const jwt_1 = require("@nestjs/jwt");
+const products_module_1 = require("./products/products.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -45,7 +46,8 @@ exports.AppModule = AppModule = __decorate([
                 password: '',
                 entities: [__dirname + '/**/*.entity{.ts,.js}'],
             }),
-            auth_module_1.AuthModule],
+            auth_module_1.AuthModule,
+            products_module_1.ProductsModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService,
             jwt_decode_middleware_1.JwtDecodeMiddleware,

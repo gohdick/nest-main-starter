@@ -12,6 +12,7 @@ import { ValidationPipe } from '../pipes/validation.pipe';
 import { AuthModule } from './auth/auth.module';
 import { JwtDecodeMiddleware } from './jwt-decode.middleware';
 import { JwtService } from '@nestjs/jwt';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -28,7 +29,8 @@ import { JwtService } from '@nestjs/jwt';
       password: '',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }),
-    AuthModule],
+    AuthModule,
+    ProductsModule],
   
   controllers: [AppController],
   providers: [AppService ,
