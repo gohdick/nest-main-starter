@@ -50,7 +50,8 @@ let ProductsService = class ProductsService {
         if (!product) {
             throw new common_1.NotFoundException('ไม่พบสินค้า');
         }
-        return this.productRepository.save(product);
+        const merged = this.productRepository.merge(product, updateProductDto);
+        return this.productRepository.save(merged);
     }
     async remove(id) {
         const product = await this.productRepository.findOneBy({ productId: id });
